@@ -54,6 +54,9 @@ class NPKRequest {
       const throwResult = throwDice(diceCount)
       npkResponse.setOutputParameters(throwResult)
       break
+    case 'answer.opponent.caution_champion':
+      npkResponse.answerCautionChampion(throwResult)
+      break
     }
   }
 }
@@ -74,6 +77,15 @@ class NPKResponse {
       diceCount: throwResult.diceCount,
       sum: throwResult.sum,
       midText: throwResult.midText,
+    }
+  }
+
+  answerCautionChampion() {
+
+    this.output = {
+      OPPONENT_CAUTION_CHAMPION: '애쉬',
+      OPPONENT_CHAMPION_TEAR: '골드',
+      OPPONENT_CHAMPION_WINNING_RATE: '86',
     }
   }
 
