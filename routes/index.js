@@ -5,6 +5,7 @@ const router = express.Router();
 router.post(`/nugu/ThrowDiceAction`, nugu);
 router.post(`/nugu/ThrowYesAction`, nugu);
 
+router.post(`/nugu/answer.opponent`, nugu);
 router.post(`/nugu/answer.opponent.specific`, nugu);
 router.post(`/nugu/answer.opponent.caution_champion`, nugu);
 router.post(`/nugu/answer.spell.specific_champion.specific_spell`, nugu);
