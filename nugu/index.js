@@ -55,7 +55,7 @@ class NPKRequest {
       npkResponse.setOutputParameters(throwResult)
       break
     case 'answer.opponent' || 'answer.opponent.caution_champion':
-      npkResponse.answerCautionChampion(throwResult)
+      npkResponse.answerCautionChampion()
       break
     }
   }
