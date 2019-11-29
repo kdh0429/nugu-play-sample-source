@@ -23,18 +23,10 @@ class Game:
         self.bannedChampions  = json_game_info['bannedChampions']
         self.gameLength = None
 
-        # op.gg crawling
-        # search = requests.get(OPGG_USER_URL + self.nugu_player)
-        # html = search.text
-        # soup = BeautifulSoup(html, 'html.parser') #html.parser를 사용해서 soup에 넣겠다
-
-        # tag = soup.find_all("div", {"class":"l-wrap l-wrap--summoner"})[0]#.find_all("td")
-        
         self.players_name = []
         self.players_id = []
         self.players_rune_tree = []
         self.players_level = []
-        self.players_tier = []
         self.players_champion = []
         self.players_spell = []
         
@@ -48,7 +40,7 @@ class Game:
                                            config.spell_list[str(player['spell2Id'])] ])
 
 
-    def level_of_champion(self, idx):
+    def level_of_champion(self, idx):####
         print(CHAMP_MASTERY + str(self.players_id[idx]) + "/by-chamion/"
                                     + str(self.participants[idx]['championId']) + '?api_key=' + API_KEY)
         mastery_info = requests.get(CHAMP_MASTERY + str(self.players_id[idx]) + "/by-champion/"

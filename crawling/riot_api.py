@@ -47,14 +47,38 @@ def ChamionSummary(champion_name):
     champ_stats_url = config.get_champ_stat_url(champion_name)
     search = requests.get(champ_stats_url)
     html = search.text
-    champ_soup = BeautifulSoup(html, 'html.parser') #html.parser를 사용해서 soup에 넣겠다
+    champ_soup = BeautifulSoup(html, 'html.parser')
     
+
+    # Get recommended spells
+    spells = champ_soup.select(".champion-stats__list__item img.tip")
+    spell_recommend = []
+    idx = 0
+    tmp = []
+    for spell in spells:
+        tmp.append(str(spell).split('&gt;')[1].split('&lt')[0])
+        idx += 1
+        if idx % 2 == 0:
+            spell_recommend.append(tmp)
+            tmp = []
+    print(spell_recommend)
+
+
+    # Get a skill-mastery [w, q, e]
+    skill_mastery = champ_soup.select(".champion-stats__list__item span")
+    skill_mastery_recommend = []
+    for skill in skill_mastery:
+        skill_mastery_recommend.append(skill.text)
+
+
     # Get a skill tree
-    skill_tree = champ_soup.select(".champion-stats__list__item span")
-    skill_recommend = []
+    skill_tree = champ_soup.select(".champion-skill-build__table td")
+    skill_tree_recommend = []
     for skill in skill_tree:
-        skill_recommend.append(skill.text)
-    print(skill_recommend)
+        skill_tree_recommend.append(skill.text.strip())
+    while len(skill_tree_recommend) != 18:
+        skill_tree_recommend.append(skill_tree_recommend[-1])
+
 
     # Get a rune and winning rate
     runes = champ_soup.select(".champion-stats-summary-rune__name")
@@ -64,7 +88,20 @@ def ChamionSummary(champion_name):
     recommend_rune_list = []
     for rune, rune_rate in zip(runes, rune_rates):
         recommend_rune_list.append([rune.text, rune_rate])
-    print(recommend_rune_list)
+
+
+    # Get a detailed tree
+    rune_detail = champ_soup.select(".perk-page__item.perk-page__item--active img")
+    rune_detailed_list = []
+    idx = 0
+    tmp = []
+    for rune in rune_detail:
+        tmp.append(str(rune).split('"')[1])
+        idx += 1
+        if idx % 6 == 0:
+            rune_detailed_list.append(tmp)
+            tmp = []
+
 
     # Get a item tree and winning rate
     items = champ_soup.select(".champion-overview__row.champion-overview__row")
@@ -72,28 +109,19 @@ def ChamionSummary(champion_name):
     for item in items:
         item_names = item.select(".champion-stats__list__item")
         tmp = []
-        if len(item_names) != 1:
-            for item_name in item_names:
-                tmp.append( str(item_name).split('&gt')[1].split(';')[1][:-3] )
-        else:
-            tmp.append( str(item_names[0]).split('&gt')[1].split(';')[1][:-3] )
+        for item_name in item_names:
+            tmp.append( str(item_name).split('&gt')[1].split(';')[1][:-3] )
         tmp.append(item.select(".champion-overview__stats.champion-overview__stats--win.champion-overview__border")[0].text.split('\n')[1])# get item winning rate
         item_recommend_list.append(tmp)
-    print(item_recommend_list)
 
-    # Get a counter
-    counters = champ_soup.select(".champion-stats-header-matchup__table__winrate")
-    a = champ_soup.select(".champion-stats-header-matchup__table.champion-stats-header-matchup__table--strong.tabItem td")
-    # print(a)
+    # Get info. of counters
+    get_counter_url = ".champion-stats-header-matchup__table.champion-stats-header-matchup__table--strong.tabItem " 
+    counters = champ_soup.select(get_counter_url+"img")
+    counters_winning_rate = champ_soup.select(get_counter_url+"b")
+    counter_list = []
+    for i, j in zip(counters[0::2], counters_winning_rate):
+        counter_list.append([i.text.strip(), j.text])
 
-    
-
-# hey = '-1'
-# a = 'minsoo{}'.format(hey)
-# print(a)
-# hey = '-2'
-# a = 'minsoo{}'.format(hey)
-# print(a)
 
 
 if __name__ == "__main__":
@@ -103,24 +131,25 @@ if __name__ == "__main__":
     player_id = None
 
     ############ --------- PLAYER SUMMARY ---------- ############
-    player_summary = PlayerSummary(player_name)
-    print(player_summary)
+    # player_summary = PlayerSummary(player_name)
+    # print(player_summary)
 
-    chamion_name = 'aurelionsol'
-    champ_summary = ChamionSummary(chamion_name)
-    # print(champ_data.find_all("span"))# print(champ_data.get("span"))
+
+
+    # chamion_name = 'aurelionsol'
+    # champ_summary = ChamionSummary(chamion_name)
+    # # print(champ_data.find_all("span"))# print(champ_data.get("span")
+
 
     player_id, account_id = get_player_id(player_name)
-    print(player_id)
-    print(account_id)
-
+    # print(player_id)
+    # print(account_id)
     # r = requests.get(MATCH_HISTORY + account_id + '?api_key=' + API_KEY).json()
 
 
-    # ## current game!
-    # current_game_info = requests.get(CURRENT_GAME_URL + player_id +'?api_key=' + API_KEY).json()
-
-    # current_game = Game(player_name, current_game_info)
+    ## current game!
+    current_game_info = requests.get(CURRENT_GAME_URL + player_id +'?api_key=' + API_KEY).json()
+    current_game = Game(player_name, current_game_info)
     # # print(current_game.participants)
     # print(current_game.players_name)
     # print(current_game.players_level)
