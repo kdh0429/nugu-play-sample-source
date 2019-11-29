@@ -54,7 +54,7 @@ class NPKRequest {
       const throwResult = throwDice(diceCount)
       npkResponse.setOutputParameters(throwResult)
       break
-    case 'answer.opponent' || 'answer.opponent.caution_champion':
+    case 'answer.opponent.caution_champion':
       npkResponse.answerCautionChampion()
       break
     }
