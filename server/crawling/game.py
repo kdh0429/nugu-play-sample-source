@@ -4,6 +4,7 @@ from bs4 import BeautifulSoup
 from datetime import datetime
 import time
 from config import Config
+# from crawling.config import Config
 
 config = Config()
 API_KEY = config.api_key
@@ -29,6 +30,7 @@ class Game:
         self.players_level = []
         self.players_champion = []
         self.players_spell = []
+        self.players_opponent = []
         
         for player in self.participants:
             self.players_name.append(player['summonerName'])
@@ -38,9 +40,11 @@ class Game:
             self.players_champion.append(config.champion_list[str(player['championId'])])
             self.players_spell.append([ config.spell_list[str(player['spell1Id'])], 
                                            config.spell_list[str(player['spell2Id'])] ])
+            self.players_opponent+=[True if player['teamId'] == 200 else False]
+        
 
 
-    def level_of_champion(self, idx):####
+    def level_of_champion(self, name):####
         print(CHAMP_MASTERY + str(self.players_id[idx]) + "/by-chamion/"
                                     + str(self.participants[idx]['championId']) + '?api_key=' + API_KEY)
         mastery_info = requests.get(CHAMP_MASTERY + str(self.players_id[idx]) + "/by-champion/"
@@ -50,3 +54,4 @@ class Game:
         
 
         return champion_level, champion_point
+

@@ -16,24 +16,25 @@ class Config:
         reader = csv.reader(open('champion_list.csv', 'r'))
         self.champion_list = {}
         for row in reader:
-            k, v = row
-            self.champion_list[k] = v
+            k, v, t = row
+            self.champion_list[k] = [v, t]
         
         reader = csv.reader(open('spell_list.csv', 'r'))
         self.spell_list = {}
         for row in reader:
-            k, v = row
-            self.spell_list[k] = v
+            k, v, t = row
+            self.spell_list[k] = [v, t]
 
-        reader = csv.reader(open('item_list.csv', 'r'))
-        self.item_list = {}
-        for row in reader:
-            k, v = row
-            self.item_list[k] = v
 
-        
-    def get_champ_stat_url(self, name):
-        return 'https://www.op.gg/champion/{}/statistics/mid'.format(name)
+        # reader = csv.reader(open('item_list.csv', 'r'))
+        # self.item_list = {}
+        # for row in reader:
+        #     k, v = row
+        #     self.item_list[k] = v
+        #
+        #
+    def get_champ_stat_url(self, name, lane):
+        return 'https://www.op.gg/champion/{}/statistics/{}'.format(name, lane)
 
 ######################################## ignore these lines
 # champion_id_url = requests.get("http://ddragon.leagueoflegends.com/cdn/9.23.1/data/en_US/item.json")
