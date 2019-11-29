@@ -35,7 +35,7 @@ class Config:
     def get_champ_stat_url(self, name):
         return 'https://www.op.gg/champion/{}/statistics/mid'.format(name)
 
-
+######################################## ignore these lines
 # champion_id_url = requests.get("http://ddragon.leagueoflegends.com/cdn/9.23.1/data/en_US/item.json")
 # champion_id_json = champion_id_url.json()
 
